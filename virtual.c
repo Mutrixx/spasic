@@ -23,7 +23,7 @@ int machine_init(int pfd[2], char *argv){
 	break;
       countdown--;
     }
-    machine_message(WARNING, "Couldn't allocate desired memory size. Quitting\n");
+    machine_message(WARNING, "Couldn't allocate desired memory size. Quitting.\n");
   }
   /*set bytes for symbol descriptor table length*/
   memset(machine, 0, TBL_LENGTH_LEN);                      
