@@ -14,6 +14,7 @@ Commands to add
 	* QUIT - exits
 	
 Statements to add
+
 	* PRINT - prints value to console
 	
 	* INPUT - reads variable
