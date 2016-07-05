@@ -1,2 +1,4 @@
 Spasic
-A BASIC interpreter.
+======
+
+A BASIC interpreter and virtual machine.
