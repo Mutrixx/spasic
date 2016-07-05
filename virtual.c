@@ -76,9 +76,19 @@ uint_8 machine_add_symbol(char *name, uint_8 length){
   if(machine_check_allocated(tbl_length, tbl_length+sizeof(struct symbol), tbl_length)){
     message(DEBUG, "Symbol table extending, relocating symbols");
     memcpy(&machine, (tbl_length+sizeof(struct symbol)), TBL_LENGTH_LEN);
-    /*Loop through symbols moving ones inside the new length of the symbol table*/
 
+    /*Loop through symbols relocating ones that are inside the new length of the symbol table*/
+    
+    offset=TBL_LENGTH_LEN;
+    while(offset<tbl_length){
+      tmp_variable=machine+offset;
+      if(tmp_variable->address<(tbl_length+TBL_LENGTH_LEN)){
+	tmp_variable->address=0;
+	tmp_variable->address=machine_allocate_address(tmp_variable->length);
+      }
+      offset=offset+sizeof(symbol);
     }
+  }
   &tmp_symbol=machine+tbl_length;
   memcpy(&machine, &tbl_length+sizeof(struct symbol), sizeof(uint16_t));
   memcpy(tmp_symbol->name, name, strlen(name)+1);
@@ -171,7 +181,7 @@ static uint_8 machine_check_allocated(uint_16 start, uint_16 end, uint_8 tbl_len
     message(ERROR, "Invalid memory range\n");
     return 2;
   }
-  if(end>memory_size||start<0){
+  if(end>memory_size||start<(TBL_LENGTH_LEN+tbl_length)){
     message(DEBUG, "Memory range is outside of the machine's range. Ignoring.\n");
     return 3;
   }
