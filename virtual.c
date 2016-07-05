@@ -21,7 +21,7 @@ int machine_init(int pfd[2], char *argv){
 	break;
       countdown--;
     }
-    fprintf(pfd[0],"WARNING: Couldn't allocate desired memory size. Quitting\n");
+    fprintf(pfd[0],"WARNING: Couldn't allocate desired memory size. Quitting.\n");
   }
   memset(machine, 0, 4);                      /*set bytes for symbol descriptor table length*/
 }
