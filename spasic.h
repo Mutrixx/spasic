@@ -19,10 +19,10 @@ enum data_type{
   BOOL
 };
 
-struct variable{
+struct symbol{
   uint_8 length;
   uint_16 address;
-  char name[MAX_NAME_LENGTH];
+  const char name[MAX_NAME_LENGTH];
 };
 
 enum MESSAGE_LEVELS{
