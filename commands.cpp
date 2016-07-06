@@ -10,20 +10,14 @@ void inputStrip(line) {
   TokenScanner scanner;
   scanner.setInput(input);
   string number = scanner.nextToken();
-  if (scanner.getTokenType(number) == NUMBER) 
-    {
+  if (scanner.getTokenType(number) == NUMBER)  {
       int line_number = stringToInteger(firstTerm);
     {
-      else 
-	{
-	  
-      string token = scanner.nextToken();
+      else{	  
+	string token = scanner.nextToken();
 	}
-
     }
-
-    }
-
+  }
 }
 
 
