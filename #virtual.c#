@@ -1,3 +1,4 @@
+
 #include "spasic.h"
 
 void *machine;
@@ -126,16 +127,12 @@ uint_8 machine_remove_symbol(const char *name){
   return 1;
 }
 
-void message(uint_8 message_level, const char *frmt, ...){
-  if(message_level>=message_level){
+void machine_message(uint_8 message_level, const char *frmt, ...){
+  if(machine_message_level>=message_level){
     va_list args;
     va_start(valist, frmt);
     vfprintf(pfd[0], frmt, args);
     va_end(args);
-    if(pid>0)
-      vprintf(pfd[0], frmt, args); 
-    else
-      vfprintf(frmt, args);    
   }
   return;
 }
