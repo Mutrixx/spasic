@@ -10,11 +10,21 @@ int pid;
 class BASIC{
 public:
   BASIC(string input);
+  void print();
   int line_number;
-  string operation;
+  int operation;
   std::list<string> operands;
   BASIC& operator=(BASIC_instruction &other); 
 };
+
+void BASIC::print(){
+  std::list<string>::iterator j;
+  std::cout << line_number;
+  std::cout << operation_to_string(operation);
+  for(j=0;j<program.operands.size();j++)
+    std::cout << operands[j];
+  std::count << endl;
+}
 
 class variable{
 public:
@@ -104,7 +114,7 @@ void parse_loop(){
 	  if(tmp_instruction.line_number>program[list.size()-1])
 	    program.push_back(tmp_instruction);
 	}
-	else if(tmp_instruction.operation=="FOR"||tmp_instruction.operation=="IF"||tmp_instruction.opcode=DATA||tmp_instruction.opcode=WHILE||tmp_instruction.opcode==DO){
+	else if(tmp_instruction.operation=="FOR"||tmp_instruction.operation=="IF"||tmp_instruction.operation="DATA"||tmp_instruction.operation="WHILE"||tmp_instruction.operation=="DO"){
 	  state=MACRO;
 	  macro.empty();
 	  macro.push_front(tmp_instruction);
@@ -126,12 +136,7 @@ void parse_loop(){
 	  else if(input=="LIST"){
 	    std::list<BASIC>::iterator i;
 	    for(i=0;i<program.size();i++){
-	      std::list<string>::iterator j;
-	      std::cout << program[i].line_number;
-	      std::cout << opcode_to_sring(program[i].opcode);
-	      for(j=0;j<program.operands.size();j++)
-		std::cout << program.operands[j];
-	      std::count << endl;
+	      program[i].print();
 	    }
 	  }	
 	}
@@ -166,22 +171,62 @@ void *get_machine_output(bool stop_input){
 
 void run(std::list<BASIC> program, bool tron, int startpoint){
   std::list<machine_code> machine_code;
-  struct machine_code *machine_code;
-  
-  machine_code_list=compile(program);
-  machine_code=code_list_array(machine_code_list);
-  machine_execute(machine_code);
+  int i;
+  for(i=0;i<program.size();i++){
+    if(tron)
+      cout << program[i].line_number << endl;
+    if(program[i].operation==GOTO){
+      int j;
+      for(j=0;j<program.size();j++){
+	if(program[i].line_number)
+	  i=j;
+      }
+    }
+    else if(operation==IF||operation==WHILE){
+      struct value value;
+
+      value=evaluate(program.operands);
+      if(value.type!=BOOL){
+	message(ERROR, "Condition is not a boolean expression.\n");
+	return;
+      }
+      if(*(value.value)==TRUE)
+	continue;
+      if(*(value.value)==FALSE){
+	int j;
+	int depth=1;
+	for(j=i;j<program.size();j++){
+	  if(((program[j].operation==ENDIF)&&(program[i].operation==IF))
+	     || (program[j].operation==WEND)&&(program[i].operation==WHILE))
+	    depth=depth-1;
+	  if(program[j].operation==program[i].operation)
+	    depth=dept+1;
+	  if(depth=0)
+	    i=j+1;
+	}
+	message(WARNING, "IF statement doesn't have corresponding 
+                          ENDIF instruction \n");
+      }
+    }
+    else if(program[i].operation==PRINT){
+      struct value value;
+
+      if(is_variable(operation.operands)){
+	struct symbol *symbol;
+	char *print;
+	symbol=machine_get_symbol(operation.operands.c_str());
+	print = malloc(symbol->length+1);
+	memcpy(print, symbol->address + machine, symbol->length);
+	print[symbol->length]='\0';
+	printf("%s\n", print);
+      }
+      value=evaluate(program[i].operands);      
+    }
+  }  
   return;
 }
 
-std::list<machine_code> compile(std::list program){
-  int i;
-  std::list<machine_code> machine_code;
+struct value evaluate(string expression){
 
-  for(i=0;i<program.size();i++){
-    switch(program[i].opcode){
-    case: 
-      
-    }
-  }  
+
 }

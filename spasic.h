@@ -25,6 +25,11 @@ struct symbol{
   const char name[MAX_NAME_LENGTH];
 };
 
+struct value{
+  int type;
+  void *value;
+}
+
 enum MESSAGE_LEVELS{
   CRITICAL,
   ERROR,
@@ -39,3 +44,12 @@ enum STATES{
   QUIT
 };
 
+enum OPERATIONS{
+  GOTO,
+  PRINT,
+  FOR,
+  WHILE,
+  WEND,
+  NEXT,
+  LET
+};

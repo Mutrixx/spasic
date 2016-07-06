@@ -30,9 +30,9 @@ int machine_init(int pfd[2], char *argv){
   memset(machine, 0, TBL_LENGTH_LEN);                      
 }
 
-void *machine_get_symbol(char *symbol_name){
+struct symbol *machine_get_symbol(char *symbol_name){
   uint16_t tbl_length=0;
-  struct symbol tmp_symbol;
+  struct symbol *tmp_symbol;
   uint16_t offset;
 
   free(machine);
@@ -45,10 +45,10 @@ void *machine_get_symbol(char *symbol_name){
   /*Search through symbol table to find symbol, skipping symbol table length*/
   offset=TBL_LENGTH_LEN;
   while(offset<tbl_length){
-    memcpy(&tmp_symbol, machine+offset, sizeof(struct symbol));
-    if(strcmp(symbol_name, tmp_symbol.name)==0){
+    tmp_symbol=machine+offset;
+    if(strcmp(symbol_name, tmp_symbol->name)==0){
       machine_message(DEBUG, "Got symbol %s at address %x\n", symbol_name, tmp_symbol.address);
-      return (machine+tmp_symbol.address);
+      return tmp_symbol
     }
     offset=offeset+sizeof(struct symbol);
   }
