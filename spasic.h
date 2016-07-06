@@ -32,3 +32,10 @@ enum MESSAGE_LEVELS{
   INFO,
   DEBUG
 };
+
+enum STATES{
+  NONE,
+  MACRO,
+  QUIT
+};
+

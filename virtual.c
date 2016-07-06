@@ -128,15 +128,29 @@ uint_8 machine_remove_symbol(const char *name){
 
 void message(uint_8 message_level, const char *frmt, ...){
   if(message_level>=message_level){
+    char level[9];
+    switch(message_level){
+    case INFO:
+      strcpy(level,"INFO");
+      break;
+    case DEBUG:
+      strcpy(level, "DEBUG");
+      break;
+    case WARNING:
+      strcpy(level, "WARNING");
+      break;
+    case ERROR:
+      strcpy(level, "ERROR");
+      break;
+    case CRITICAL:
+      strcpy(level, "CRITICAL");
+      break;
+    }
     va_list args;
     va_start(valist, frmt);
-    vfprintf(pfd[0], frmt, args);
+    printf("%s:",level);
+    vprintf(frmt, valist);
     va_end(args);
-    if(pid>0)
-      vprintf(pfd[0], frmt, args); 
-    else
-      vfprintf(frmt, args);    
-  }
   return;
 }
 
