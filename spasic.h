@@ -44,7 +44,7 @@ enum STATES{
   QUIT
 };
 
-enum OPERATIONS{
+enum INSTRUCTIONS{
   GOTO,
   PRINT,
   FOR,
@@ -52,4 +52,17 @@ enum OPERATIONS{
   WEND,
   NEXT,
   LET
+};
+
+enum OPERATIONS{
+  INDEX,
+  DIVIDE,
+  MULTIPLY,
+  ADD,
+  MINUS,
+  GREAT,
+  LESS,
+  GREAT_E,
+  LESS_E,
+  EQUAL
 };
