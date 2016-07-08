@@ -54,15 +54,4 @@ enum INSTRUCTIONS{
   LET
 };
 
-enum OPERATIONS{
-  INDEX,
-  DIVIDE,
-  MULTIPLY,
-  ADD,
-  MINUS,
-  GREAT,
-  LESS,
-  GREAT_E,
-  LESS_E,
-  EQUAL
-};
+
