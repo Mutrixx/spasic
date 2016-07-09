@@ -20,9 +20,11 @@ enum data_type{
 };
 
 struct symbol{
+  uint_8 type;
   uint_8 length;
-  uint_16 address;
+  uint_32 address;
   const char name[MAX_NAME_LENGTH];
+
 };
 
 struct value{

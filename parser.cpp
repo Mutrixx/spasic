@@ -50,18 +50,10 @@ BASIC& operator=(BASIC other){
 }
   
 int main(int argc, char **argv){
-  struct list *input_head;
-
-  pipe(pdf);
-  pid=fork();
-  if(pid==0){
-    close(pdf[1]);
-    machine_init(pfd, argv[1]);    
-  }
-  else if(pid>0){
-    close(pdf[0]);
-    parse_loop(pdf, input_head);
-  }
+  void *add;
+  add=machine_add_symbol("A",1,INT);
+  mem
+  evaluate("A*B");
 }
 
 void parse_loop(){
@@ -267,12 +259,14 @@ void run(std::list<BASIC> program, bool tron, int startpoint){
   }
 }
 
-struct value *evaluate(string expression){
+struct value evaluate(string expression){
   struct value rc;
+  struct symbol *symbol;
   int i, j;
-  value *operands[2];
-  char *op={'g','l','=','<','>','-','+','/','*','^','('};
-  while(i<(sizeof(op)/sizeof(char))){
+  value operands[2];
+  char *op={GREATER_THAN_OR_EQUAL_TO,LESS_THAN_OR_EQUAL_TO,'=','<','>','-','+','/','*','^','(','\0'};
+
+  while(i<strlen(op)){
     for(j=0;j<expression.length();j++){
       if(expression[j]==op[i]){
 	operands[0]=evaluate(expression.substr(0,j-1));
@@ -280,22 +274,7 @@ struct value *evaluate(string expression){
 	if((!operands[0])||(!operands[1])){
 	  return NULL;
 	}
-	switch(op[j]){
-	case '^':
-	  if(operands[0]->type==INT&&operands[1]->type==INT){
-	    rc.type==INT;
-	    rc->value=malloc(sizeof(int));
-	    *(rc->value)=pow(operands[0]->value,operands[2]->value);
-	    }
-	  else if((operands[0]->type==INT||operands[0]->type==FLOAT)&&(operands[1]->type==INT||operands[0]==FLOAT)){
-	      rc.type==FLOAT;
-	      rc->value==malloc(sizeof(float));
-	      *(rc->value)=pow(*(operands[0]->value),*(operands[2]->value));	      
-	  }
-	  else{
-	    message(ERROR, "Failed to evaluate expression, %s. Operands must be INTs or FLOATs.\n");
-	    return NULL;   
-	  }
+	switch(op[i]){
 	case '(':
 	  int k,depth=1;
 	  for(k=j,k<expression.length();k++){
@@ -308,27 +287,68 @@ struct value *evaluate(string expression){
 	  }
 	  message(ERROR "Mismatched parentheses in expression, %s.\n");
 	  return NULL;
+	case ')':
+	  message(ERROR "Mismatched parentheses in expression, %s.\n");
+	  return NULL;
 	case '*':
-	   if(operands[0]->type==INT&&operands[1]->type==INT){
-	    rc.type==INT;
-	    rc->value=malloc(sizeof(int));
-	    *(rc->value)=*(operands[0]->value) * (*(operands[2]->value));
-	   }
-	   else if((operands[0]->type==INT||operands[0]->type==FLOAT)&&(operands[1]->type==INT||operands[0]==FLOAT)){
-	     rc.type==FLOAT;
-	    rc->value==malloc(sizeof(float));
-	    *(rc->value)=*(operands[0]->value) * (*(operands[2]->value));	      
-	  }
-	  else{
-	    message(ERROR, "Failed to evaluate expression, %s. Operands must be                             INTs or FLOATs.\n");
-	  }
+	  return multiply(operands[0],operands[1]);
+	case '^':
+	  power(operands[0],operands[1]);
 	case '/':
+	  return divide(operands[0],operands[1]);
+	case '+':
+	  return add(operands[0],operands[1]);
+	case '-':
+	  return subract(operands[0],operands[1]);
+	case '=':
+	  return equals(operands[0],operands[1]);
+	case '<':
+	  return less(operands[0], operands[1]);
+	case '>':
+	  return greater(operands[0],operands[1]);
+	case LESS_THAN_OR_EQUAL_TO:
+	  return lequal(operands[0],operands[1]);
+	case GREATER_THAN_OR_EQUAL_TO:
+	  return gequal(operands[0],operands[1]);
+	default:
+	  break;
+	  /* TODO: finish this for every operator */
+	}
+      }
+    }
+    i++;
+  }
+  symbol = machine_get_symbol(expression);
+  rc.type=symbol->type;
+  rc.data=malloc(symbol->length);
+  memcpy(rc.data, symbol->data, symbol->length);
+  return rc;
+}
+
+struct value divide(value e1, value e2){ 
 	  if(*(operands[1]->value)==0){
 	    message(ERROR, "Tried to divide by 0. %s \n", expression);
 	    return NULL;
 	  }
 	  if(operands[0]->type==INT&&operands[1]->type==INT){
 	    rc.type==INT;
+	    rc->value=malloc(sizeof(int));
+	    (int)*(rc->value)=*(operands[0]->value) / (*(operands[2]->value));
+	   }
+	   else if((operands[0]->type==INT||operands[0]->type==FLOAT)&&(operands[1]->type==INT||operands[1]==FLOAT)){
+	     rc.type==FLOAT;
+	    rc->value==malloc(sizeof(float));
+	    (float)*(rc->value)=*(operands[0]->value) / (*(operands[2]->value));      
+	  }
+	  else{
+	    message(ERROR, "Failed to evaluate expression, %s. Operands must be INTs or FLOATs.\n");
+	  }
+}
+
+struct value multiply(value e1. value e2){
+  	  if(operands[0]->type==INT0&&operands[1]->type==INT){
+	    rc.type==INT;
+	    
 	    rc->value=malloc(sizeof(int));
 	    (int)*(rc->value)=*(operands[0]->value) / (*(operands[2]->value));
 	   }
@@ -339,15 +359,5 @@ struct value *evaluate(string expression){
 	  }
 	  else{
 	    message(ERROR, "Failed to evaluate expression, %s. Operands must be INTs or FLOATs.\n");
-	  }
-	case '/':
-
-	  /* TODO: finish this for every operator */
-	}
-      }
-    }
-  }
+	  }  
 }
-
-  
-  

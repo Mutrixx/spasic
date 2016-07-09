@@ -55,7 +55,7 @@ struct symbol *machine_get_symbol(char *symbol_name){
   return NULL;
 }
 
-uint_8 machine_add_symbol(char *name, uint_8 length){
+uint_16 machine_add_symbol(char *name, uint_8 length, uint_8 type){
   uint16_t offset;
   uint16_t tbl_lenght;
   struct symbol *tmp_symbol;
@@ -76,9 +76,7 @@ uint_8 machine_add_symbol(char *name, uint_8 length){
   if(machine_check_allocated(tbl_length, tbl_length+sizeof(struct symbol), tbl_length)){
     message(DEBUG, "Symbol table extending, relocating symbols");
     memcpy(&machine, (tbl_length+sizeof(struct symbol)), TBL_LENGTH_LEN);
-
     /*Loop through symbols relocating ones that are inside the new length of the symbol table*/
-    
     offset=TBL_LENGTH_LEN;
     while(offset<tbl_length){
       tmp_variable=machine+offset;
@@ -101,10 +99,11 @@ uint_8 machine_add_symbol(char *name, uint_8 length){
   }
   else{
     machine_message(ERROR: "Failed to allocate memory for symbol, %s\n", tmp_symbol->name);
+    return 0;
   }
 }
 
-uint_8 machine_remove_symbol(const char *name){
+uint_16 machine_remove_symbol(const char *name){
   uint16_t offset;
   uint16_t tbl_lenght;
   struct symbol *tmp_symbol;
